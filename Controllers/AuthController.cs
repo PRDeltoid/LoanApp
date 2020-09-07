@@ -32,8 +32,6 @@ namespace App.Controllers
         //POST: /auth/signin/
         public async Task<IActionResult> SignIn([Bind("Email,Password")] LoginRequestModel login)
         {
-            SHA1 sha = SHA1.Create();
-
             //Find a user with a matching email as entered
             var foundUser = await _context.Users
                 .FirstOrDefaultAsync(m => m.Email == login.Email);
@@ -45,6 +43,7 @@ namespace App.Controllers
             }
 
             //Otherwise, check the DB hash against our user's entered password's hash
+            SHA1 sha = SHA1.Create();
             string passAndSalt = login.Password + foundUser.Salt;
             byte[] passAndSaltBytes = Encoding.ASCII.GetBytes(passAndSalt);
             byte[] newHash = sha.ComputeHash(passAndSaltBytes);

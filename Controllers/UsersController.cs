@@ -47,9 +47,9 @@ namespace App.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email,Name,HashedPassword,Salt")] UserModel user)
+        // POST: api/users/
+        [HttpPost("")]
+        public async Task<IActionResult> Create([Bind("Name,Email,Password")] UserModel user)
         {
             if (ModelState.IsValid)
             {
@@ -60,8 +60,8 @@ namespace App.Controllers
             return Ok(user);
         }
 
-        // POST: Users/Edit/{id}
-        [HttpPost]
+        // POST: api/users/edit/{id}
+        [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Email,Name,HashedPassword,Salt")] UserModel user)
         {
@@ -93,7 +93,7 @@ namespace App.Controllers
         }
 
         // POST: Users/Delete/{id}
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id)
         {
