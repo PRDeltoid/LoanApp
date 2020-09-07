@@ -80,5 +80,12 @@ namespace App.Controllers
             };
             return Ok(new LoginResultModel {  JWTAccessToken = jwtToken, User = returnUser});
         }
+
+        [HttpGet("signout")]
+        public IActionResult SignOut()
+        {
+            Response.Cookies.Delete("t");
+            return Ok("Sign out successful!");
+        }
     }
 }
