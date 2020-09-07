@@ -69,9 +69,16 @@ namespace App.Controllers
             IAuthService jwt = new JWTService(model.SecretKey);
             string jwtToken = jwt.GenerateToken(model);
             //Add it as a cookie to the response
-            Response.Cookies.Append("jwt", jwt.GenerateToken(model));
+            Response.Cookies.Append("t", jwt.GenerateToken(model));
             //Return our JWT access token and the authenticated user's information
-            return Ok(new LoginResultModel {  JWTAccessToken = jwtToken, Name = foundUser.Name, Email = foundUser.Email});
+            //Make a temporary user to strip out private info (like passwords)
+            UserModel returnUser = new UserModel
+            {
+                _id = foundUser._id,
+                Name = foundUser.Name,
+                Email = foundUser.Email,
+            };
+            return Ok(new LoginResultModel {  JWTAccessToken = jwtToken, User = returnUser});
         }
     }
 }

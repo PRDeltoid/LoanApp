@@ -65,7 +65,7 @@ namespace App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Email,Name,HashedPassword,Salt")] UserModel user)
         {
-            if (id != user.id.ToString())
+            if (id != user._id.ToString())
             {
                 return NotFound();
             }
