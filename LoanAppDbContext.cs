@@ -15,11 +15,11 @@ namespace App
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserModel> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("Users");
+            modelBuilder.Entity<UserModel>().ToTable("Users");
         }
     }
 }

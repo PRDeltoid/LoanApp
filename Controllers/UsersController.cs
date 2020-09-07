@@ -49,7 +49,7 @@ namespace App.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email,Name,HashedPassword,Salt")] User user)
+        public async Task<IActionResult> Create([Bind("Email,Name,HashedPassword,Salt")] UserModel user)
         {
             if (ModelState.IsValid)
             {
@@ -63,9 +63,9 @@ namespace App.Controllers
         // POST: Users/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Email,Name,HashedPassword,Salt")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Email,Name,HashedPassword,Salt")] UserModel user)
         {
-            if (id != user.Email)
+            if (id != user.id.ToString())
             {
                 return NotFound();
             }
