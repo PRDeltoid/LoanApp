@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using App;
 using App.Models;
+using System.Linq.Expressions;
 
 namespace App.Controllers
 {
@@ -48,13 +49,19 @@ namespace App.Controllers
         }
 
         // POST: api/users/
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> Create([Bind("Name,Email,Password")] UserModel user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                } catch
+                {
+                    return BadRequest("There was an error creating the user");
+                }
                 return RedirectToAction(nameof(Index));
             }
             return Ok(user);
