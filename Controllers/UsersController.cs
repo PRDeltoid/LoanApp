@@ -60,7 +60,7 @@ namespace App.Controllers
                     await _context.SaveChangesAsync();
                 } catch
                 {
-                    return BadRequest("There was an error creating the user");
+                    return BadRequest(new { error = "There was an error creating the user" });
                 }
                 return RedirectToAction(nameof(Index));
             }
