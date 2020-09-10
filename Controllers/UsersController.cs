@@ -58,9 +58,9 @@ namespace App.Controllers
                 {
                     _context.Add(user);
                     await _context.SaveChangesAsync();
-                } catch
+                } catch(Exception e)
                 {
-                    return BadRequest(new { error = "There was an error creating the user" });
+                    return BadRequest(new { error = "There was an error creating the user\nException details: " + e.Message });
                 }
                 return RedirectToAction(nameof(Index));
             }
