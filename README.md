@@ -4,8 +4,24 @@ Testbed for determining what kind of technologies to use for an SPA Money Lender
 
 # Technologies
 
-Currently using ASP.NET Core 2.1 and EntityFramework Core on backend and Reactjs and Nodejs on frontend. MaterialUI used for CSS/styling.
+Mostly tested and written under Windows 10 x64. 
 
-SQL Server 2019 required for database (can be run via Docker image `docker pull mcr.microsoft.com/mssql/server:2019-latest`)
+## Backend:
+- ASP.NET Core 3.2 as API server
+- EntityFramework Core as data layer
+- SQL Server 2019 as database
 
-Expected SQL server name is 'sql_server_demo' and can be created via PowerShell using the command `docker run -d --name sql_server_demo -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=reallyStrongPwd123' -p 1433:1433 microsoft/mssql-server-linux`. Default login information for the above would be: username `sa` password `reallyStrongPwd123`
+## Frontend:
+- NodeJS used as web server
+- Reactjs used for webapp
+- Material UI used for CSS/styling.
+
+## SQL Server
+SQL Server 2019 can be downloaded via Docker using `docker pull mcr.microsoft.com/mssql/server:2019-latest`
+
+A Docker container can be created via PowerShell using the command `docker run -d --name sql_server_demo -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=reallyStrongPwd123' -p 1433:1433 microsoft/mssql-server-linux`. Using CommandPrompt.exe may cause issues with the single quotes in the above commands, so please use PowerShell if possible
+
+Default SQL server name: `sql_server_demo`
+Default user: username `sa` password `reallyStrongPwd123`.
+
+You should have some form of SQL management software (SSMS recommended) to execute SQL scripts to generate the initial database schema (found in CreateDefaultDatabase.sql)
