@@ -15,8 +15,8 @@ namespace App.Models
         public string HashedPassword { get; set; }
 
         /// <summary>
-        /// A virtual column (does not exist in the DB) which hashes the password using the user's salt and sets the value
-        /// If the user has no salt, this will generate it first
+        /// A virtual column (does not exist in the DB) which hashes the password using the user's salt and sets the HashedPassword property
+        /// If the user has no salt, it will generate it first
         /// </summary>
         public string Password { 
             set

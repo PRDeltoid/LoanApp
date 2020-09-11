@@ -36,7 +36,7 @@ namespace App.Controllers
             //If no user was found, exit with error
             if(foundUser == null)
             {
-                return NotFound("User not found");
+                return Unauthorized(new { error = "User not found" });
             }
 
             //Otherwise, check the DB hash against our user's entered password's hash
@@ -46,7 +46,7 @@ namespace App.Controllers
             //If they failed to hash to the same value, return an error
             if (!authed)
             {
-                return BadRequest("Password entered is incorrect");
+                return Unauthorized(new { error = "Password entered is incorrect" });
             }
 
             IAuthContainerModel model = new JWTContainerModel()
