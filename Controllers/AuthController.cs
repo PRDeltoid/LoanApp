@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using App.Helpers;
 using App.Managers;
 using App.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Controllers
@@ -47,17 +40,13 @@ namespace App.Controllers
             }
 
             //Otherwise, check the DB hash against our user's entered password's hash
-            SHA1 sha = SHA1.Create();
-            string passAndSalt = login.Password + foundUser.Salt;
-            byte[] passAndSaltBytes = Encoding.ASCII.GetBytes(passAndSalt);
-            byte[] newHash = sha.ComputeHash(passAndSaltBytes);
-            string newHashString = string.Concat(newHash.Select(b => b.ToString("X2")));
-            bool authed = (foundUser.HashedPassword == newHashString);
+            string loginPassHash = PasswordHelper.GeneratePasswordHash(login.Password, foundUser.Salt);
+            bool authed = (foundUser.HashedPassword == loginPassHash);
 
             //If they failed to hash to the same value, return an error
             if (!authed)
             {
-                return NotFound("Password entered is incorrect");
+                return BadRequest("Password entered is incorrect");
             }
 
             IAuthContainerModel model = new JWTContainerModel()

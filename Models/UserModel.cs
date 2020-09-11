@@ -1,34 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using App.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace App.Models
 {
     public class UserModel 
     {
+        private string salt;
         #region Members
         [Key]
         public Guid _id { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string HashedPassword { get; set; }
-        public string Password { set
-            {
-                //TODO: Generate this each time instead of using a hardcoded value
-                this.Salt = "test12";
 
-                SHA1 sha = SHA1.Create();
-                string passAndSalt = value + this.Salt;
-                byte[] passAndSaltBytes = Encoding.ASCII.GetBytes(passAndSalt);
-                byte[] newHash = sha.ComputeHash(passAndSaltBytes);
-                string newHashString = string.Concat(newHash.Select(b => b.ToString("X2")));
-                this.HashedPassword = newHashString;
-            } }
-        public string Salt { get; set; }
+        /// <summary>
+        /// A virtual column (does not exist in the DB) which hashes the password using the user's salt and sets the value
+        /// If the user has no salt, this will generate it first
+        /// </summary>
+        public string Password { 
+            set
+            {
+                this.HashedPassword = PasswordHelper.GeneratePasswordHash(value, this.Salt);
+            } 
+        }
+
+        public string Salt {
+            get 
+            { 
+                // Generate a salt if one does not exist
+                if (salt == null) { 
+                    //TODO: Generate this salt per user
+                    salt = "test12"; 
+                } 
+                return salt; 
+            } 
+            set 
+            { 
+                this.salt = value; 
+            }
+        }
         #endregion
     }
 }
