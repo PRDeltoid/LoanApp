@@ -41,13 +41,24 @@ namespace App.Controllers
         // GET: api/users/{id}
         public async Task<IActionResult> Details(string id)
         {
+            //Check if the entered ID is valid
             if (id == null)
             {
                 return NotFound();
             }
 
+            //Check if the provided ID is a valid Guid
+            Guid idGuid;
+            try
+            {
+                idGuid = Guid.Parse(id);
+            } catch
+            {
+                return BadRequest();
+            }
+
             var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Email == id);
+                .FirstOrDefaultAsync(m => m._id == idGuid);
             if (user == null)
             {
                 return NotFound();
