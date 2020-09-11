@@ -15,13 +15,25 @@ namespace App.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        #region Members
         private readonly LoanAppDbContext _context;
+        #endregion
 
+        #region Constructor
         public UsersController(LoanAppDbContext context)
         {
             _context = context;
         }
+        #endregion
 
+        #region Private Methods
+        private bool UserExists(string id)
+        {
+            return _context.Users.Any(e => e.Email == id);
+        }
+        #endregion
+
+        #region Public Methods
         [HttpGet]
         // GET: api/users/
         public async Task<IActionResult> Index()
@@ -60,6 +72,7 @@ namespace App.Controllers
                     await _context.SaveChangesAsync();
                 } catch(Exception e)
                 {
+                    //TODO: Remove exception details from this error in production    
                     return BadRequest(new { error = "There was an error creating the user\nException details: " + e.Message });
                 }
                 return RedirectToAction(nameof(Index));
@@ -109,10 +122,6 @@ namespace App.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool UserExists(string id)
-        {
-            return _context.Users.Any(e => e.Email == id);
-        }
+        #endregion
     }
 }

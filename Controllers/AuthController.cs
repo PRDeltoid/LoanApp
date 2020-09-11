@@ -20,13 +20,18 @@ namespace App.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        #region Members
         private readonly LoanAppDbContext _context;
+        #endregion
 
+        #region Constructor
         public AuthController(LoanAppDbContext context)
         {
             _context = context;
         }
+        #endregion
 
+        #region Public Methods
         [HttpPost("signin")]
         //POST: /auth/signin/
         public async Task<IActionResult> SignIn([Bind("Email,Password")] LoginRequestModel login)
@@ -66,17 +71,19 @@ namespace App.Controllers
             //Generate a JWT token for further authentication
             IAuthService jwt = new JWTService(model.SecretKey);
             string jwtToken = jwt.GenerateToken(model);
+
             //Add it as a cookie to the response
             Response.Cookies.Append("t", jwt.GenerateToken(model));
+
             //Return our JWT access token and the authenticated user's information
-            //Make a temporary user to strip out private info (like passwords)
+            //  Make a temporary user to strip out private info out of the user model (like passwords)
             UserModel returnUser = new UserModel
             {
                 _id = foundUser._id,
                 Name = foundUser.Name,
                 Email = foundUser.Email,
             };
-            return Ok(new LoginResultModel {  JWTAccessToken = jwtToken, User = returnUser});
+            return Ok(new { JWTAccessToken = jwtToken, User = returnUser});
         }
 
         [HttpGet("signout")]
@@ -85,5 +92,6 @@ namespace App.Controllers
             Response.Cookies.Delete("t");
             return Ok("Sign out successful!");
         }
+        #endregion
     }
 }

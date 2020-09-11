@@ -10,6 +10,7 @@ namespace App.Models
 {
     public class UserModel 
     {
+        #region Members
         [Key]
         public Guid _id { get; set; }
         public string Email { get; set; }
@@ -28,5 +29,6 @@ namespace App.Models
                 this.HashedPassword = newHashString;
             } }
         public string Salt { get; set; }
+        #endregion
     }
 }

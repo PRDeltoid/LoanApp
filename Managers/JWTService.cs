@@ -57,9 +57,11 @@ namespace App.Managers
         /// <returns>Generated token.</returns>
         public string GenerateToken(IAuthContainerModel model)
         {
+            // Sanity check the model
             if (model == null || model.Claims == null || model.Claims.Length == 0)
                 throw new ArgumentException("Arguments to create token are not valid.");
 
+            // Bundle the token description into a descriptor object
             SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(model.Claims),
@@ -67,6 +69,7 @@ namespace App.Managers
                 SigningCredentials = new SigningCredentials(GetSymmetricSecurityKey(), model.SecurityAlgorithm)
             };
 
+            // Generate the token using our descriptor object
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken = jwtSecurityTokenHandler.CreateToken(securityTokenDescriptor);
             string token = jwtSecurityTokenHandler.WriteToken(securityToken);
