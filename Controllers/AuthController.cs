@@ -27,11 +27,11 @@ namespace App.Controllers
         #region Public Methods
         [HttpPost("signin")]
         //POST: /auth/signin/
-        public async Task<IActionResult> SignIn([Bind("Email,Password")] LoginRequestModel login)
+        public async Task<IActionResult> SignIn([Bind("Username,Password")] LoginRequestModel login)
         {
             //Find a user with a matching email as entered
             var foundUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.Email == login.Email);
+                .FirstOrDefaultAsync(m => m.Username == login.Username);
 
             //If no user was found, exit with error
             if(foundUser == null)
@@ -40,7 +40,7 @@ namespace App.Controllers
             }
 
             //Otherwise, check the DB hash against our user's entered password's hash
-            string loginPassHash = PasswordHelper.GeneratePasswordHash(login.Password, foundUser.Salt);
+            string loginPassHash = UserHelper.GeneratePasswordHash(login.Password, foundUser.Salt);
             bool authed = (foundUser.HashedPassword == loginPassHash);
 
             //If they failed to hash to the same value, return an error
@@ -53,7 +53,7 @@ namespace App.Controllers
             {
                 Claims = new Claim[]
                 {
-                    new Claim(ClaimTypes.Email, login.Email)
+                    new Claim(ClaimTypes.UserData, foundUser.Username)
                 },
             };
 
@@ -69,6 +69,7 @@ namespace App.Controllers
             UserModel returnUser = new UserModel
             {
                 _id = foundUser._id,
+                Username = foundUser.Username,
                 Name = foundUser.Name,
                 Email = foundUser.Email,
             };

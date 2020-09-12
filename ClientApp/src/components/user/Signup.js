@@ -18,7 +18,7 @@ import { registerUser } from "../../utils/api-user.js";
 
 const Signup = (props) => {
   const [form, setState] = useState({
-    email: "",
+    username: "",
     password: "",
     open: false,
     error: "",
@@ -34,7 +34,7 @@ const Signup = (props) => {
   const clickSubmit = () => {
     const user = {
       name: form.name || undefined,
-      email: form.email || undefined,
+      username: form.username || undefined,
       password: form.password || undefined,
     };
     registerUser(user).then((data) => {
@@ -70,12 +70,12 @@ const Signup = (props) => {
           />
           <br />
           <TextField
-            id="email"
-            type="email"
-            label="Email"
+            id="username"
+            type="username"
+            label="Username"
             className={classes.textField}
-            value={form.email}
-            onChange={handleChange("email")}
+            value={form.username}
+            onChange={handleChange("username")}
             margin="normal"
           />
           <br />

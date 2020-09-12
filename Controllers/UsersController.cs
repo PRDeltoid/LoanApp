@@ -13,6 +13,8 @@ namespace App.Controllers
     {
         #region Members
         private readonly LoanAppDbContext _context;
+
+        private const int minimumPasswordLength = 6;
         #endregion
 
         #region Constructor
@@ -69,8 +71,14 @@ namespace App.Controllers
 
         // POST: api/users/
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Name,Email,Password")] UserModel user)
+        public async Task<IActionResult> Create([Bind("Username,Name,Password")] UserModel user)
         {
+            // Validate password format and length
+            if(user.Password.Length < minimumPasswordLength)
+            {
+                return BadRequest(new { error = "Password must be at least 6 characters long" });
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -79,8 +87,7 @@ namespace App.Controllers
                     await _context.SaveChangesAsync();
                 } catch(Exception e)
                 {
-                    //TODO: Remove exception details from this error in production    
-                    return BadRequest(new { error = "There was an error creating the user\nException details: " + e.Message });
+                    return BadRequest(new { error = "There was an error creating your account. Please contact support."});
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -90,7 +97,7 @@ namespace App.Controllers
         // POST: api/users/edit/{id}
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Email,Name,HashedPassword,Salt")] UserModel user)
+        public async Task<IActionResult> Edit(string id, [Bind("Username,Email,Name,HashedPassword,Salt")] UserModel user)
         {
             if (id != user._id.ToString())
             {

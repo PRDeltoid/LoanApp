@@ -13,7 +13,7 @@ import { signin } from "../../utils/api-auth.js";
 
 const Signin = (props) => {
   const [form, setState] = useState({
-    email: "",
+    username: "",
     password: "",
     error: "",
     redirectToReferrer: false,
@@ -21,7 +21,7 @@ const Signin = (props) => {
 
   const clickSubmit = () => {
     const user = {
-      email: form.email || undefined,
+      username: form.username || undefined,
       password: form.password || undefined,
     };
     signin(user).then((data) => {
@@ -63,12 +63,12 @@ const Signin = (props) => {
           Sign In
         </Typography>
         <TextField
-          id="email"
-          type="email"
-          label="Email"
+          id="username"
+          type="username"
+          label="Username"
           className={classes.textField}
-          value={form.email}
-          onChange={handleChange("email")}
+          value={form.username}
+          onChange={handleChange("username")}
           margin="normal"
         />
         <br />
