@@ -1,15 +1,20 @@
 ﻿using App.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
 namespace App.Models
 {
     public class UserModel 
     {
         private string salt;
+        private string password;
+
         #region Members
         [Key]
         public Guid _id { get; set; }
+        public string Username { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string HashedPassword { get; set; }
@@ -18,20 +23,26 @@ namespace App.Models
         /// A virtual column (does not exist in the DB) which hashes the password using the user's salt and sets the HashedPassword property
         /// If the user has no salt, it will generate it first
         /// </summary>
-        public string Password { 
+        [NotMapped]
+        public string Password {
+            get
+            {
+                return this.password;
+
+                }
             set
             {
-                this.HashedPassword = PasswordHelper.GeneratePasswordHash(value, this.Salt);
-            } 
+                password = value;
+                this.HashedPassword = UserHelper.GeneratePasswordHash(value, this.Salt);
+            }
         }
 
         public string Salt {
             get 
             { 
                 // Generate a salt if one does not exist
-                if (salt == null) { 
-                    //TODO: Generate this salt per user
-                    salt = "test12"; 
+                if (salt == null) {
+                    salt = UserHelper.GenerateSalt();
                 } 
                 return salt; 
             } 
